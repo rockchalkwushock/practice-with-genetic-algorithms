@@ -4,11 +4,11 @@ defmodule Types.Chromosome do
   """
 
   @type t :: %__MODULE__{
-    age: integer(),
-    fitness: number(),
-    genes: Enum.t(),
-    size: integer()
-  }
+          age: integer(),
+          fitness: number(),
+          genes: Enum.t(),
+          size: integer()
+        }
 
   @enforce_keys :genes
 
