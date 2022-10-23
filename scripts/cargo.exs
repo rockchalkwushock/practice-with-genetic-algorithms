@@ -1,7 +1,7 @@
 defmodule Cargo do
   @behaviour Problem
   alias Types.Chromosome
-  import Enum, only: [map: 2, max_by: 2, random: 1, sum: 1, zip: 2]
+  import Enum, only: [map: 2, random: 1, sum: 1, zip: 2]
 
   @impl true
   def genotype() do
@@ -34,9 +34,7 @@ defmodule Cargo do
   end
 
   @impl true
-  def terminate?(population) do
-    max_by(population, &Cargo.fitness_function/1).fitness == 53
-  end
+  def terminate?(_population, generation), do: generation == 100
 end
 
 solution = Genetics.run(Cargo, population_size: 50)
