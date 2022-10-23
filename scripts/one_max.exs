@@ -13,7 +13,7 @@ defmodule OneMax do
   def fitness_function(chromosome), do: sum(chromosome.genes)
 
   @impl true
-  def terminate?([best | _]), do: best.fitness == 42
+  def terminate?(_population, _generation, temperature), do: temperature < 25
 end
 
 solution = Genetics.run(OneMax)

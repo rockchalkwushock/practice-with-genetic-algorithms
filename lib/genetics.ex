@@ -2,7 +2,7 @@ defmodule Genetics do
   @moduledoc """
   Documentation for `Genetics`.
   """
-  import Enum, only: [chunk_every: 2, map: 2, reduce: 3, shuffle: 1, sort_by: 3, split: 2]
+  import Enum, only: [chunk_every: 2, map: 2, max_by: 2, reduce: 3, shuffle: 1, sort_by: 3, split: 2]
   import Keyword, only: [get: 3]
   import List, only: [to_tuple: 1]
   alias Types.Chromosome
@@ -13,20 +13,21 @@ defmodule Genetics do
   """
   def run(problem, opts \\ []) do
     population = initialize(&problem.genotype/0)
-    first_generation = 0
 
     population
-    |> evolve(problem, first_generation, opts)
+    |> evolve(problem, 0, 0, 0, opts)
   end
 
-  defp evolve(population, problem, generation, opts) do
+  defp evolve(population, problem, generation, last_max_fitness, temperature, opts) do
     population = evaluate(population, &problem.fitness_function/1, opts)
 
-    best = hd(population)
+    best = max_by(population, &problem.fitness_function/1)
+    best_fitness = best.fitness
+    temperature = 0.8 * (temperature + (best_fitness - last_max_fitness))
 
     IO.write("\rCurrent Best: #{best.fitness}")
 
-    if problem.terminate?(population, generation) do
+    if problem.terminate?(population, generation, temperature) do
       best
     else
       generation = generation + 1
@@ -35,7 +36,7 @@ defmodule Genetics do
       |> select(opts)
       |> crossover(opts)
       |> mutation(opts)
-      |> evolve(problem, generation, opts)
+      |> evolve(problem, generation, best_fitness, temperature, opts)
     end
   end
 
