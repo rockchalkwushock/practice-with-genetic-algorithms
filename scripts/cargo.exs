@@ -34,7 +34,7 @@ defmodule Cargo do
   end
 
   @impl true
-  def terminate?(_population, generation), do: generation == 100
+  def terminate?(_population, generation), do: generation == 1000
 end
 
 solution = Genetics.run(Cargo, population_size: 50)
